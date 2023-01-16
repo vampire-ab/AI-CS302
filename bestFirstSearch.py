@@ -28,10 +28,18 @@ win = False
 ans = []
 
 frontier = Q.PriorityQueue()
-#cost, game
-frontier.put([0, game])
+#cost, g, h, game
+frontier.put([0, 0, 0, game])
 
-#Make a move since the move we are making is valid
+
+def findSum(currentGame):
+    result = 0
+    for num in currentGame:
+        if num is not None:
+            result += num
+    print(result)
+
+
 def updateArray(prevGame, x1, y1, x2, y2):
     array = list(prevGame)
     updatedArray = []
@@ -54,7 +62,7 @@ def updateArray(prevGame, x1, y1, x2, y2):
     newTuple = tuple(tuple(row) for row in updatedArray)
     return newTuple
 
-#If a valid move is possible, it increases the path cost as we mve forward.
+
 def validator(currentGame, x1, y1, x2, y2):
     x3 = None
     y3 = None
@@ -106,6 +114,19 @@ def checkGameSituation(gameSituation):
             win = True
             return
 
+# Manhattan Distance
+
+
+def get_estimate(newTuple):
+    cost = 0
+    for i in range(7):
+        for j in range(7):
+            if newTuple[i][j] == 1:
+                cost += abs(i-3) + abs(j-3)
+
+    return cost
+# Exponential Distance from Horizontal or Vertical
+
 
 def play():
     global win
@@ -114,60 +135,68 @@ def play():
     while not frontier.empty():
         current = frontier.get()
 
-        checkGameSituation(current[1])
-        # print(finished)
+        checkGameSituation(current[3])
+
         if (win):
-            ans = list(current[1])
+            ans = list(current[3])
             print("Won")
             break
-        if (current[1] in allSituations):
+        if finished:
+            finished = False
             continue
-        rotated1 = tuple(tuple(current[1][col][row] for col in range(
+        # if(current[3] == )
+        if (current[3] in allSituations):
+            # print("Found Same 0")
+            # print("FOund: ", current[3])
+            continue
+        rotated1 = tuple(tuple(current[3][col][row] for col in range(
             n)) for row in range(n - 1, -1, -1))
         if (rotated1 in allSituations):
+            # print("Found Same 1")
             continue
         rotated2 = tuple(tuple(rotated1[col][row] for col in range(
             n)) for row in range(n - 1, -1, -1))
         if (rotated2 in allSituations):
+            # print("Found Same 2")
             continue
         rotated3 = tuple(tuple(rotated2[col][row] for col in range(
             n)) for row in range(n - 1, -1, -1))
         if (rotated3 in allSituations):
+            # print("Found Same 3")
             continue
-        allSituations.add(current[1])
+        allSituations.add(current[3])
+
         for i in range(0, 7):
             for j in range(0, 7):
-                if (current[1][i][j] == 1):
+                if (current[3][i][j] == 1):
                     global checked
                     checked += 1
-                    #Move Down
-                    if (i < 6 and validator(current[1], i, j, i+1, j)):
+                    if (i < 6 and validator(current[3], i, j, i+1, j)):
                         newTuple = (updateArray(
-                            current[1], i, j, i+1, j))
+                            current[3], i, j, i+1, j))
+                        h = get_estimate(newTuple)
                         frontier.put(
-                            [current[0]+1, newTuple])
-                    
-                    #Move Up
-                    if (i > 0 and validator(current[1], i, j, i-1, j)):
+                            [current[1]+1+h, current[1]+1, h, newTuple])
+                    if (i > 0 and validator(current[3], i, j, i-1, j)):
                         newTuple = (updateArray(
-                            current[1], i, j, i-1, j))
+                            current[3], i, j, i-1, j))
+                        h = get_estimate(newTuple)
                         frontier.put(
-                            [current[0]+1, newTuple])
-
-                    #Move Right
-                    if (j < 6 and validator(current[1], i, j, i, j+1)):
+                            [current[1]+1+h, current[1]+1, h, newTuple])
+                    if (j < 6 and validator(current[3], i, j, i, j+1)):
                         newTuple = (updateArray(
-                            current[1], i, j, i, j+1))
+                            current[3], i, j, i, j+1))
+                        h = get_estimate(newTuple)
                         frontier.put(
-                            [current[0]+1, newTuple])
-
-                    #Move Left
-                    if (j > 0 and validator(current[1], i, j, i, j-1)):
+                            [current[1]+1+h, current[1]+1, h, newTuple])
+                    if (j > 0 and validator(current[3], i, j, i, j-1)):
                         newTuple = (updateArray(
-                            current[1], i, j, i, j-1))
+                            current[3], i, j, i, j-1))
+                        h = get_estimate(newTuple)
                         frontier.put(
-                            [current[0]+1, newTuple])
-        print(checked)        
+                            [current[1]+1+h, current[1]+1, h, newTuple])
+        # print(checked)
+        print(len(allSituations))
 
 
 play()
