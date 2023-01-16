@@ -108,7 +108,7 @@ def checkGameSituation(gameSituation):
             for j in range(0, n):
                 if gameSituation[i][j] is not None:
                     summ += gameSituation[i][j]
-        if (summ == 1):
+        if (summ == 1 and gameSituation[3][3] == 1):
             print("sum = 1", gameSituation)
             finished = True
             win = True
