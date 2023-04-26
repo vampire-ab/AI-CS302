@@ -115,8 +115,6 @@ def checkGameSituation(gameSituation):
             return
 
 # Exponential Distance from Horizontal or Vertical
-
-
 def get_estimate(curr_state):
     cost = 0
     for i in range(7):
@@ -197,7 +195,7 @@ def play():
                         frontier.put(
                             [current[1]+1+h, current[1]+1, h, newTuple])
         # print(checked)
-        print(len(allSituations))
+        # print(len(allSituations))
 
 
 play()

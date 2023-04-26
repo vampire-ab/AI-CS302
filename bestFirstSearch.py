@@ -125,7 +125,6 @@ def get_estimate(newTuple):
                 cost += abs(i-3) + abs(j-3)
 
     return cost
-# Exponential Distance from Horizontal or Vertical
 
 
 def play():
@@ -195,8 +194,8 @@ def play():
                         h = get_estimate(newTuple)
                         frontier.put(
                             [current[1]+1+h, current[1]+1, h, newTuple])
-        # print(checked)
-        print(len(allSituations))
+        print(checked)
+        # print(len(allSituations))
 
 
 play()
